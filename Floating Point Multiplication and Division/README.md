@@ -1,0 +1,4 @@
+Multiplication and division are simple because the mantissa and exponents can be processed independently. FP multiplication requires fixed point multiplication of mantissa and fixed-point addition of exponents. As discussed in chapter 3 (Data representation) the exponents are stored in the biased form. The bias is +127 for IEEE single precision and +1023 for double precision. During multiplication, when both the exponents are added it results in excess 127. Hence the bias is to be adjusted by subtracting 127 or 1023 from the resulting exponent.
+
+Floating point multiplication example
+Floating Point division requires fixed-point division of mantissa and fixed point subtraction of exponents. The bias adjustment is done by adding +127 to the resulting mantissa. Normalization of the result is necessary in both the cases of multiplication and division. Thus FP division and subtraction are not much complicated to implement.
