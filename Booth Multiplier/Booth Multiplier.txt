@@ -1,0 +1,77 @@
+module booth_multiplier(clk,reset,M,Q,prdt);
+    input clk,reset;
+    input  [3:0] M,Q;
+    output reg  [7:0]prdt;
+    
+    reg Q0;
+    reg [3:0]count;
+    reg [8:0]A;
+    
+        
+    reg [1:0]state,nextstate;
+    
+    localparam S0=2'd0;
+    localparam S1=2'd1;
+    localparam S2=2'd2;
+    localparam S3=2'd3;
+    
+    always @(posedge clk or posedge reset)
+    begin
+        if(reset)
+        begin
+            state<=S0;
+            prdt<=8'd0;
+            
+        end
+        
+        else
+        begin
+            state<=nextstate;
+        end
+    end
+    
+    
+    always @(*)
+    case(state)
+    
+        S0:begin
+                count=4'd0;
+                Q0=1'b0;
+                A={4'd0,Q[3:0],Q0};
+                nextstate=S1;
+            end
+
+        S1:begin
+            if(A[1]==1'b1 && A[0]==1'b0)
+            begin
+                A[8:5]=A[8:5]-M[3:0];
+                nextstate=S2;
+            end
+            
+            else if(A[1]==1'b0 && A[0]==1'b1)
+            begin
+                A[8:5]=A[8:5]+M[3:0];
+                nextstate=S2;
+            end
+            
+            else if(A[1]==1'b0 && A[0]==1'b0)
+                nextstate=S2;
+                
+            else if(A[1]==1'b1 && A[0]==1'b1)
+                nextstate=S2;
+            end
+    
+        S2:begin
+            A={A[8],A[8:1]};
+ //           A=A>>>1'b1;
+            count=count+1'b1;
+            
+            if(count!=4'd4)
+                nextstate=S1;
+                
+            else if(count==4'd4)
+                prdt=A[8:1];
+        end
+                
+    endcase
+endmodule
