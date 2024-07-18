@@ -1,0 +1,28 @@
+module shift_add_multiplier(clk,rst,A,B,product);
+input [3:0] A,B;
+input clk,rst;
+output reg [7:0] product;
+
+reg [8:0] a;
+reg carry;
+reg [2:0] count;
+always @(posedge clk or posedge rst)
+begin
+    if(rst) count=0;
+    else if(count < 3'd5) count=count+1;
+end
+always @(posedge clk or posedge rst)
+begin
+    if(rst) a<={5'd0,B};
+    else if(count<3'd5)
+        begin
+            if(a[0]==1) a[8:4]=a[8:4]+A;
+            a = {1'b0,a[8:1]};
+        end
+end
+always @(posedge clk or posedge rst)
+begin
+    if(rst) product = 0;
+    else if(count==3'd5) product = a[7:0];
+end
+endmodule
