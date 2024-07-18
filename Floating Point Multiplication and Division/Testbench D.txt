@@ -1,0 +1,18 @@
+module tb();
+
+reg s_dd, s_dv;
+reg [22:0] m_dd, m_dv;
+reg [7:0] e_dd, e_dv;
+
+wire s_op;
+wire [22:0] r_op, q_op;
+wire [7:0] e_op;
+
+float_pt_div uut(s_dd, m_dd, e_dd, s_dv, m_dv, e_dv, s_op, q_op, r_op, e_op);
+
+initial begin
+s_dd = 0; s_dv = 0; m_dd = 123; m_dv = 11; e_dd = 129; e_dv = 130; #20
+s_dd = 1; s_dv = 0; m_dd = 433; m_dv = 24; e_dd = 139; e_dv = 130; #20
+$stop;
+end
+endmodule

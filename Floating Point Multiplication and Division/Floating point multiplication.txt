@@ -1,0 +1,55 @@
+module float_pt_mul(s_a, m_a, e_a, s_b, m_b, e_b, s_op, m_op, e_op);
+input s_a, s_b;
+input [22:0] m_a, m_b;
+input [7:0] e_a, e_b;
+
+output reg s_op;
+output reg [22:0] m_op;
+output reg [7:0] e_op;
+
+reg s_ac, s_br;
+reg [22:0] m_ac, m_br;
+reg [7:0] e_ac, e_br, bias;
+reg [46:0] inter;
+
+integer i;
+
+always @(*)
+begin
+    s_ac = s_a;
+    s_br = s_b;
+    e_ac = e_a;
+    e_br = e_b;
+    m_ac = m_a;
+    m_br = m_b;
+    bias = 127;
+    if(m_ac == 0 || m_br == 0)
+    begin
+        s_ac = 0;
+        e_ac = 0;
+        m_ac = 0;
+    end
+    else 
+    begin
+        e_ac = e_ac + e_br;
+        
+        inter = m_br;
+        
+        repeat(24)
+        begin
+            if(inter[0] == 1)
+                inter[46:23] = inter[46:23] + m_ac;
+            inter = inter >> 1;
+        end
+        
+        if(inter[45] == 0)
+            m_ac = inter[44:22];
+        else
+            m_ac = inter[45:23];
+    end
+    s_op = s_ac ^ s_br;
+    m_op = m_ac;
+    e_op = e_ac - bias;
+end
+
+endmodule

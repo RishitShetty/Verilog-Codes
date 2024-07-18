@@ -1,0 +1,23 @@
+module tb();
+
+reg s_a, s_b;
+reg [7:0] e_a, e_b;
+reg[22:0] m_a, m_b;
+
+wire s_op;
+wire [7:0] e_op;
+wire [22:0] m_op;
+
+float_pt_mul uut(s_a, m_a, e_a, s_b, m_b, e_b, s_op, m_op, e_op);
+
+initial
+begin
+s_a = 0; s_b = 0; m_b = 23'b10011000100001010001010; m_a = 23'b10100001010010000010000; e_a = 8'b10010100; e_b = 8'b01100010;
+#20
+s_a = 0; s_b = 1; m_b = 23'b10011000111001010001010; m_a = 23'b10100001010001000010000; e_a = 8'b10010100; e_b = 8'b01100010;
+#20
+
+$stop;
+end
+
+endmodule
