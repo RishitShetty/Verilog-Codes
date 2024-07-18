@@ -1,0 +1,11 @@
+module array_multiplier_tb;
+    reg [3:0]ip1,ip2;
+    wire [7:0]prdt;
+    
+    array_multiplier UUT(ip1,ip2,prdt);
+    
+    initial begin
+    ip1=4'd10;ip2=4'd15;#100;
+    end
+    
+endmodule

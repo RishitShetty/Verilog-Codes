@@ -1,0 +1,70 @@
+module HA(a,b,sum,cout);
+    input a,b;
+    output sum,cout;
+    
+    xor (sum,a,b);
+    and (cout,a,b);
+    
+endmodule
+
+module FA(a,b,cin,sum,cout);
+    input a,b,cin;
+    output sum,cout;
+    
+    wire w1,w2,w3,w4;
+    
+    xor (w1,a,b);
+    xor (sum,w1,cin);
+    
+    and (w2,a,b);
+    and (w3,b,cin);
+    and (w4,cin,a);
+    or (cout,w2,w3,w4);
+endmodule
+
+module array_multiplier(ip1,ip2,prdt);
+    input [3:0]ip1,ip2;
+    output [7:0]prdt;
+    
+    wire p10,p01,p20,p11,p02,p30,p21,p12,p03,p31,p22,p13,p32,p23,p33;
+    
+    wire s0,s1,s2,s3,s4,s5;
+    
+    wire c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10;
+    
+    and (prdt[0],ip1[0],ip2[0]);//prdt[0]
+    
+    and (p10,ip1[1],ip2[0]);
+    and (p01,ip1[0],ip2[1]);
+    and (p20,ip1[2],ip2[0]);
+    and (p11,ip1[1],ip2[1]);
+    and (p02,ip1[0],ip2[2]);
+    and (p30,ip1[3],ip2[0]);
+    and (p21,ip1[2],ip2[1]);
+    and (p12,ip1[1],ip2[2]);
+    and (p03,ip1[0],ip2[3]);
+    and (p31,ip1[3],ip2[1]);
+    and (p22,ip1[2],ip2[2]);
+    and (p13,ip1[1],ip2[3]);
+    and (p32,ip1[3],ip2[2]);
+    and (p23,ip1[2],ip2[3]);
+    and (p33,ip1[3],ip2[3]);
+    
+    HA HA1(p10,p01,prdt[1],c0);//prdt[1]
+    
+    HA HA2(p11,p20,s0,c1);
+    FA FA1(s0,c0,p02,prdt[2],c3);//prdt[2]
+    
+    HA HA3(p20,p30,s1,c2);
+    FA FA2(s1,c1,p12,s2,c4);
+    FA FA3(s2,c3,p03,prdt[3],c6);//prdt[3]
+    
+    FA FA4(p31,c2,p22,s3,c5);
+    FA FA5(s3,c4,p13,s4,c7);
+    HA HA4(s4,c6,prdt[4],c9);//prdt[4]
+    
+    FA FA6(p32,p23,c5,s5,c8);
+    FA FA7(s5,c7,c9,prdt[5],c10);//prdt[5]
+    
+    FA FA8(p33,c8,c10,prdt[6],prdt[7]);//prdt[6],prdt[7]
+endmodule
